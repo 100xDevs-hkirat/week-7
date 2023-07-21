@@ -15,6 +15,7 @@ function Courses() {
         })
         setCourses(response.data.courses)
     }
+
     useEffect(() => {
         init();
     }, []);
