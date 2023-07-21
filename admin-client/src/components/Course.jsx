@@ -160,15 +160,23 @@ function CourseCard(props) {
         <img src={imageLink} style={{width: 350}} ></img>
         <div style={{marginLeft: 10}}>
             <Typography variant="h5">{title}</Typography>
-            <Typography variant="subtitle2" style={{color: "gray"}}>
-                Price
-            </Typography>
-            <Typography variant="subtitle1">
-                <b>Rs {price} </b>
-            </Typography>
+            <Price />
         </div>
     </Card>
     </div>
+}
+
+function Price() {
+
+    const price = useRecoilValue(coursePrice);
+    return <>
+        <Typography variant="subtitle2" style={{color: "gray"}}>
+            Price
+        </Typography>
+        <Typography variant="subtitle1">
+            <b>Rs {price} </b>
+        </Typography>
+    </>
 }
 
 export default Course;
