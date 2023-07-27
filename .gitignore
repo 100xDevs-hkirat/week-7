@@ -1,2 +1,8 @@
 admin-client/node_modules
 .idea
+node_modules
+server/node_modules
+server/package-lock.json
+admin-client/frontend-*/node_modules
+admin-client/frontend-*/package-lock.json
+admin-client/
