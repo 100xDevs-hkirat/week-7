@@ -47,7 +47,7 @@ export const courseImage = selector({
   get: ({get}) => {
     const state = get(courseState);
     if (state.course) {
-        return state.course.image;
+        return state.course.imageLink;
     }
     return "";
   },
