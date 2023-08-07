@@ -4,7 +4,7 @@ import { create_token, token_decrypter } from "../middleware/auth";
 import {
   Admin as AdminType,
   Course as CourseType,
-  signUpRequest
+  signUpRequest, access_request_validator, create_course_validator
 } from "../utilities/schema_interfaces";
 
 export const registerAdmin = async (
@@ -13,7 +13,12 @@ export const registerAdmin = async (
 ): Promise<void> => {
   // logic to sign up admin
   try {
-    const payload: signUpRequest = req.body;
+    const parsedInput = access_request_validator.safeParse(req.body);
+    if(!parsedInput.success){
+     res.status(411).json({message:"Invalid input", "Error": parsedInput.error});
+      return;
+    }
+    const payload: signUpRequest = parsedInput.data;
     const username: string = payload.username;
     const existing_account: AdminType | null = await Admin.findOne({
       username,
@@ -44,6 +49,12 @@ export const adminLogin = async (
 ): Promise<void> => {
   // logic to log in admin
   const { username, password } = req.headers;
+  const parsedInput = access_request_validator.safeParse({ username, password });
+    if(!parsedInput.success){
+     res.status(411).json({message:"Invalid input for username/password", "Error": parsedInput.error});
+      return;
+    }
+  
   const valid__credentials: AdminType | null = await Admin.findOne({
     username,
     password,
@@ -64,7 +75,12 @@ export const createCourse = async (
   res: Response
 ): Promise<void> => {
   // logic to create a course
-  const new_course = new Course(req.body);
+  const parsedInput = create_course_validator.safeParse(req.body);
+  if(!parsedInput.success){
+    res.status(411).json({message:"Invalid input for course fields", error: parsedInput.error});
+    return;
+  }
+  const new_course = new Course(parsedInput.data);
   // need to finalize type here
   await new_course.save();
   res

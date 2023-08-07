@@ -1,3 +1,5 @@
+import {z} from "zod";
+
 export interface Admin{
     _id?: string | undefined,
     username: string,
@@ -17,12 +19,26 @@ export interface Admin{
     published: Boolean
   }
 
-  export type signUpRequest = {
-    username: string,
-    password: string,
-  }
-
   export type loginRequest = {
     username: string| string[] | undefined,
     password: string| string[] | undefined,
   }
+
+  export const access_request_validator = z.object({
+    username : z.string().min(3).max(20),
+    password: z.string().min(8).max(30)
+  });
+
+  export const create_course_validator = z.object({
+    title     : z.string().min(5).max(150),
+    description   : z.string().min(1).max(500),
+    price       : z.number().lt(9999),
+    imageLink      : z.string().max(200),
+    published        : z.boolean().default(false)
+  });
+
+  export type updateCourse_validator = Partial<z.infer<typeof create_course_validator>>;
+
+  export type signUpRequest = z.infer<typeof access_request_validator>;
+
+  

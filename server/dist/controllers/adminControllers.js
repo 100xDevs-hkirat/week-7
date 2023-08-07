@@ -12,9 +12,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.adminDetails = exports.deleteSpecificCourse = exports.fetchAllCourse = exports.fetchSpecificCourse = exports.updateCourse = exports.createCourse = exports.adminLogin = exports.registerAdmin = void 0;
 const db_1 = require("../db");
 const auth_1 = require("../middleware/auth");
+const schema_interfaces_1 = require("../utilities/schema_interfaces");
 const registerAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const payload = req.body;
+        const parsedInput = schema_interfaces_1.access_request_validator.safeParse(req.body);
+        if (!parsedInput.success) {
+            res.status(411).json({ message: "Invalid input", "Error": parsedInput.error });
+            return;
+        }
+        const payload = parsedInput.data;
         const username = payload.username;
         const existing_account = yield db_1.Admin.findOne({
             username,
@@ -41,6 +47,11 @@ const registerAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 exports.registerAdmin = registerAdmin;
 const adminLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password } = req.headers;
+    const parsedInput = schema_interfaces_1.access_request_validator.safeParse({ username, password });
+    if (!parsedInput.success) {
+        res.status(411).json({ message: "Invalid input for username/password", "Error": parsedInput.error });
+        return;
+    }
     const valid__credentials = yield db_1.Admin.findOne({
         username,
         password,
@@ -57,7 +68,12 @@ const adminLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.adminLogin = adminLogin;
 const createCourse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const new_course = new db_1.Course(req.body);
+    const parsedInput = schema_interfaces_1.create_course_validator.safeParse(req.body);
+    if (!parsedInput.success) {
+        res.status(411).json({ message: "Invalid input for course fields", error: parsedInput.error });
+        return;
+    }
+    const new_course = new db_1.Course(parsedInput.data);
     yield new_course.save();
     res
         .status(200)

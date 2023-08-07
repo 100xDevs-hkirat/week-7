@@ -11,10 +11,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.purchasedCourseList = exports.purchaseCourse = exports.fetchAllCourses = exports.userLogin = exports.userRegistraton = void 0;
 const auth_1 = require("../middleware/auth");
+const schema_interfaces_1 = require("../utilities/schema_interfaces");
 const db_1 = require("../db");
 const userRegistraton = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const payload = req.body;
+        const parsedInput = schema_interfaces_1.access_request_validator.safeParse(req.body);
+        if (!parsedInput.success) {
+            res.status(411).json({ message: "Invalid input", "Error": parsedInput.error });
+            return;
+        }
+        const payload = parsedInput.data;
         const existing_account = yield db_1.User.findOne({ username: payload.username });
         existing_account && res.status(403).json({ message: 'username already exists. Please use another one!' });
         if (!existing_account) {

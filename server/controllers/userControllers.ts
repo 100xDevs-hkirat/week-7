@@ -3,14 +3,19 @@ import { create_token, token_decrypter } from "../middleware/auth";
 import {
   User as UserType,
   Course as CourseType,
-  signUpRequest
+  signUpRequest, access_request_validator
 } from "../utilities/schema_interfaces";
 import { Course, User } from "../db";
 
 export const userRegistraton = async (req: Request, res: Response): Promise<void> => {
     // logic to sign up user
     try{
-      const payload: signUpRequest = req.body;
+      const parsedInput = access_request_validator.safeParse(req.body);
+    if(!parsedInput.success){
+     res.status(411).json({message:"Invalid input", "Error": parsedInput.error});
+      return;
+    }
+     const payload: signUpRequest = parsedInput.data;
       const existing_account = await User.findOne({username:payload.username});
       existing_account && res.status(403).json({message: 'username already exists. Please use another one!'});
       if(!existing_account){
