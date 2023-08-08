@@ -1,0 +1,25 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: action/checkout@v2
+
+      - name: SSH and deploy to server
+        env:
+          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+        run:
+          echo "$SSH_PRIVATE_KEY" > keyfile
+          chmod 600 keyfile
+          mkdir -p ~/.ssh
+          cp known_hosts ~/.ssh/known_hosts
+          ssh -i keyfile ubuntu@ec2-url
+          source ./deploy.sh  
