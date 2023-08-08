@@ -17,7 +17,6 @@ app.use("/admin", adminRoute);
 app.use("/users", userRoute);
 app.use("/util", utilityRoute);
 
-
 // Connect to MongoDB
 // DONT MISUSE THIS THANKYOU!!
 // mongoose.connect('mongodb://localhost:27017/courses', { useNewUrlParser: true, useUnifiedTopology: true, dbName: "courses" });
