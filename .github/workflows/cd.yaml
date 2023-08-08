@@ -13,13 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: SSH and deploy to server
+      - name: SSH and deploy
         env:
-          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run:
           echo "$SSH_PRIVATE_KEY" > keyfile
           chmod 600 keyfile
           mkdir -p ~/.ssh
           cp known_hosts ~/.ssh/known_hosts
-          ssh -i keyfile ubuntu@16.171.235.8
+          ssh -i keyfile ubuntu@ec2-16-170-162-160.eu-north-1.compute.amazonaws.com
           source ./deploy.sh  
