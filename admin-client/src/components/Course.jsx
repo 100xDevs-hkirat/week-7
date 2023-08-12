@@ -144,7 +144,6 @@ function UpdateCard() {
 }
 
 function CourseCard(props) {
-    const title = useRecoilValue(courseTitle);
     const imageLink = useRecoilValue(courseImage);
 
     return <div style={{display: "flex",  marginTop: 50, justifyContent: "center", width: "100%"}}>
@@ -159,13 +158,20 @@ function CourseCard(props) {
     }}>
         <img src={imageLink} style={{width: 350}} ></img>
         <div style={{marginLeft: 10}}>
-            <Typography variant="h5">{title}</Typography>
+            <CardTitle />
             <Price />
         </div>
     </Card>
     </div>
 }
 
+const CardTitle = () => {
+    const title = useRecoilValue(courseTitle);
+    return (
+    <div>
+        <Typography variant="h5">{title}</Typography>
+    </div>)
+}
 function Price() {
 
     const price = useRecoilValue(coursePrice);
