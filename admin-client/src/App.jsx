@@ -62,7 +62,6 @@ function InitUser() {
                 })
             }
         } catch (e) {
-
             setUser({
                 isLoading: false,
                 userEmail: null
