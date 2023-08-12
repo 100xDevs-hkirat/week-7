@@ -168,9 +168,9 @@ function CourseCard(props) {
 const CardTitle = () => {
     const title = useRecoilValue(courseTitle);
     return (
-    <>
+    <div>
         <Typography variant="h5">{title}</Typography>
-    </>)
+    </div>)
 }
 function Price() {
 
